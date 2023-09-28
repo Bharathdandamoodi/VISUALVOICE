@@ -6,9 +6,6 @@ from google.cloud import translate
 from gtts import gTTS
 import moviepy.editor as mp
 import os
-from flask import Flask, request, render_template
-from language_selection import translate_text 
-
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"projectocr-399718-616bacd8b14e.json"
 
@@ -17,7 +14,7 @@ vision_client = vision.ImageAnnotatorClient()
 translate_client = translate.TranslationServiceClient()
 
 # Function to extract text from an image using Google Cloud Vision
-def extract_text_from_image(image_path):
+def process_image(image_path):
     with open(image_path, 'rb') as image_file:
         content = image_file.read()
     
@@ -60,31 +57,3 @@ def create_video(image_path, audio_path, video_output_path):
     video.fps = 24
 
     video.write_videofile(video_output_path, codec='libx264')
-
-app = Flask(_name_)
-
-@app.route('/')
-def index():
-    return render_template('ocr_converter.html')
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    uploaded_file = request.files['file']
-    uploaded_file.save('static/uploaded_image.jpg')
-    return render_template('ocr_converter.html', uploaded=True)
-
-@app.route('/convert', methods=['POST'])
-def convert():
-    input_image_path = "static/uploaded_image.jpg"
-    target_language = request.form['target_language']  # Get the selected language from the form
-
-    extracted_text = extract_text_from_image(input_image_path)
-
-    if extracted_text:
-        translated_text = translate_text(extracted_text, target_language)
-        text_to_speech(translated_text, target_language)
-        create_video(input_image_path, "static/output.mp3", 'static/output.mp4')
-        return render_template('ocr_converter.html', video_path='static/output.mp4')
-
-if _name_ == '_main_':
-    app.run()
