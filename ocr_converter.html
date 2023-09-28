@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Converter</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .jumbotron {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .file-input {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .video-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">OCR Converter</h1>
+        </div>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="form-group file-input">
+                <label for="file">Choose an image to upload:</label>
+                <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Image</button>
+        </form>
+        {% if uploaded %}
+        <form action="/convert" method="POST">
+            <div class="form-group">
+                <label for="target_language">Select target language:</label>
+                <select name="target_language" id="target_language" class="form-control">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <!-- Add more language options as needed -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Convert</button>
+        </form>
+        {% endif %}
+        {% if video_path %}
+        <div class="video-container">
+            <h2>Converted Video:</h2>
+            <video controls width="640" height="360">
+                <source src="{{ video_path }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
