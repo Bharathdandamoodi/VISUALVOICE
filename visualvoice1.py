@@ -62,7 +62,6 @@ def create_video(image_path, audio_path, video_output_path):
     video.write_videofile(video_output_path, codec='libx264')
 
 app = Flask(_name_)
-app.template_folder = 'C:/Users/bhara/OneDrive/Desktop/project'
 
 @app.route('/')
 def index():
